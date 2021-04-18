@@ -14,4 +14,26 @@ RSpec.describe 'Books API', type: :request do
         expect(JSON.parse(response.body).size).to eq(2)
    end
   end
+
+  describe 'create testing' do
+    it 'can create a new book record' do
+      post '/api/v1/books', params: {book: { title: Faker::Book.title, author: Faker::Book.author} }
+
+      expect(response).to have_http_status(:created)
+    end
+
+    it 'responds with unprocessable_entity sad path with author initials' do
+      post '/api/v1/books', params: {book: { title: Faker::Book.title, author: "AB"} }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+
+    end
+
+    it 'responds with unprocessable_entity sad path with inconplete title' do
+      post '/api/v1/books', params: {book: { title: 'ab', author: Faker::Book.author} }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+
+    end
+  end
 end

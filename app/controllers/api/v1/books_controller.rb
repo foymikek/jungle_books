@@ -7,7 +7,7 @@ module Api
       end
     
       def create
-        book = Book.new(author: params[:author], title: params[:title])
+        book = Book.new(book_params)
       
         if book.save
           render json: book, status: :created
