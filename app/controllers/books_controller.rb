@@ -13,6 +13,14 @@ class BooksController < ApplicationController
     end
   end
 
+  def destroy
+    # return true if the book is found and destroyed
+    Book.find_by(id: params[:id]).destroy!
+    # not returning a json response. No body, just a head response. 204
+    # no reason to return a body here as the record is being deleted.
+    head :no_content
+  end
+
   private
 
   def book_params
