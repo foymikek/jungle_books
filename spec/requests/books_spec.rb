@@ -17,9 +17,11 @@ RSpec.describe 'Books API', type: :request do
 
   describe 'create testing' do
     it 'can create a new book record' do
-      post '/api/v1/books', params: {book: { title: Faker::Book.title, author: Faker::Book.author} }
-
-      expect(response).to have_http_status(:created)
+      expect {
+        post '/api/v1/books', params: {book: { title: Faker::Book.title, author: Faker::Book.author} }
+  
+        expect(response).to have_http_status(:created)
+      }.to change { Book.count }.from(0).to(1)
     end
 
     it 'responds with unprocessable_entity sad path with author initials' do
