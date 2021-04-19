@@ -2,11 +2,12 @@ require 'rails_helper'
 
 RSpec.describe 'Books API', type: :request do
   describe 'index testing' do
+    before do
+       2.times do
+        FactoryBot.create(:book)
+      end   
+    end
       it 'should return all books' do
-        2.times do
-          FactoryBot.create(:book)
-        end
-        
         get '/api/v1/books'
         
         expect(response).to have_http_status(:success)
