@@ -38,4 +38,16 @@ RSpec.describe 'Books API', type: :request do
 
     end
   end
+
+  describe 'delete testing' do
+    it 'deletes a book record' do
+      book = FactoryBot.create(:book)
+
+      expect {
+        delete "/api/v1/books/#{book.id}"
+      }.to change { Book.count }.from(1).to(0)
+
+      expect(response).to have_http_status(:no_content)
+    end
+  end
 end
