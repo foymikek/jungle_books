@@ -36,6 +36,15 @@ RSpec.describe 'Books API', type: :request do
         expect(response).to have_http_status(:created)
       }.to change { Book.count }.from(0).to(1)
 
+      expect(JSON.parse(response.body, symbolize_names: true)).to eq(
+        {
+          id: Book.all.last.id,
+          title: Book.all.last.title,
+          author: "#{Book.last.author.first_name} #{Book.last.author.last_name}",
+          author_age: Book.last.author.age
+        }
+      )
+
       expect(Author.all.count).to eq(1)
     end
 
