@@ -14,7 +14,7 @@ RSpec.describe 'Books API', type: :request do
       2.times do
            author.books.create(title: Faker::Book.title, author_id: author.id)
          end
-      get '/api/v1/books'
+      get api_v1_books_path
       
       expect(response).to have_http_status(:success)
       expect(response_body).to eq(
@@ -49,7 +49,7 @@ RSpec.describe 'Books API', type: :request do
            author.books.create(title: Faker::Book.title, author_id: author.id)
          end
 
-      get '/api/v1/books', params: {
+      get api_v1_books_path, params: {
         limit: 1
       }
       expect(response).to have_http_status(:success)
@@ -78,7 +78,7 @@ RSpec.describe 'Books API', type: :request do
            author.books.create(title: Faker::Book.title, author_id: author.id)
          end
 
-      get '/api/v1/books', params: {
+      get api_v1_books_path, params: {
         limit: 1,
         offset: 1
       }
@@ -95,6 +95,23 @@ RSpec.describe 'Books API', type: :request do
       )
       expect(JSON.parse(response.body).size).to eq(1)
     end
+
+    it 'pagination function has a max limit of 20' do
+      Book.destroy_all
+      Author.destroy_all
+  
+      author = Author.create(
+        first_name: Faker::Name.first_name, last_name: Faker::Name.last_name, age: (15..85).to_a.sample 
+        )
+  
+      30.times do
+           author.books.create(title: Faker::Book.title, author_id: author.id)
+         end
+
+      expect(Book).to receive(:limit).with(20).and_call_original
+
+      get api_v1_books_path, params: { limit: 30 }
+    end
   end
 
   describe 'create testing' do
@@ -104,7 +121,7 @@ RSpec.describe 'Books API', type: :request do
     it 'can create a new book record' do
       expect(Author.all.count).to eq(0)
       expect {
-        post '/api/v1/books', params: {
+        post api_v1_books_path, params: {
           book:   { title: Faker::Book.title },
           author: { first_name: Faker::Name.first_name, last_name: Faker::Name.last_name, age: (15..85).to_a.sample }
         }
@@ -126,7 +143,7 @@ RSpec.describe 'Books API', type: :request do
       Book.destroy_all
       Author.destroy_all
 
-      post '/api/v1/books', params: {
+      post api_v1_books_path, params: {
         book: { title: 'ab'},
         author: { first_name: Faker::Name.first_name, last_name: Faker::Name.last_name, age: (15..85).to_a.sample }
       }
