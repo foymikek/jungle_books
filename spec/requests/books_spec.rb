@@ -17,7 +17,7 @@ RSpec.describe 'Books API', type: :request do
       get '/api/v1/books'
       
       expect(response).to have_http_status(:success)
-      expect(JSON.parse(response.body, symbolize_names: true)).to eq(
+      expect(response_body).to eq(
         [
           {
           id: Book.all.first.id,
@@ -52,7 +52,7 @@ RSpec.describe 'Books API', type: :request do
         expect(response).to have_http_status(:created)
       }.to change { Book.count }.from(0).to(1)
 
-      expect(JSON.parse(response.body, symbolize_names: true)).to eq(
+      expect(response_body).to eq(
         {
           id: Book.all.last.id,
           title: Book.all.last.title,
