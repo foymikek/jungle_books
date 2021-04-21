@@ -17,6 +17,22 @@ RSpec.describe 'Books API', type: :request do
       get '/api/v1/books'
       
       expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body, symbolize_names: true)).to eq(
+        [
+          {
+          id: Book.all.first.id,
+          title: Book.all.first.title,
+          author: "#{Book.first.author.first_name} #{Book.first.author.last_name}",
+          author_age: Book.first.author.age
+        },
+        {
+          id: Book.all.last.id,
+          title: Book.all.last.title,
+          author: "#{Book.last.author.first_name} #{Book.last.author.last_name}",
+          author_age: Book.last.author.age
+        }
+      ]
+      )
       
       expect(JSON.parse(response.body).size).to eq(2)
    end
@@ -44,7 +60,6 @@ RSpec.describe 'Books API', type: :request do
           author_age: Book.last.author.age
         }
       )
-
       expect(Author.all.count).to eq(1)
     end
 
