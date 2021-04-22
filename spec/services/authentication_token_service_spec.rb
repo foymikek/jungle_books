@@ -3,10 +3,9 @@ require 'rails_helper'
 describe AuthenticationTokenService do
   describe '.call' do
     it 'returns an authentication token' do
-      hmac_secret   = 'my$ecretK3y'
       token         = described_class.call
-      decoded_token = JWT.decode token, hmac_secret, true, { algorithm: 'HS256' }
-      # require 'pry'; binding.pry
+      decoded_token = JWT.decode token, described_class::HMAC_SECRET, true, { algorithm: described_class::ALGORITHM_TYPE }
+      
       expect(decoded_token).to eq(
         [
           {"test"=>"testing"},
